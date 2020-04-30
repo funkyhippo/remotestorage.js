@@ -415,12 +415,8 @@ IndexedDB._rs_supported = function () {
       }
 
       // iOS 12 and 13 have serious bugs (see #1168)
-      if (ua.match(/(ipod|iphone|ipad)/i)) {
-        const versionMatch = ua.match(/os (\d+([_\s]\d+)*) like mac os x/i);
-        const version = (versionMatch && versionMatch.length > 0 && versionMatch[1]) || '';
-        if (version.match(/^1[2|3]/)) {
-          poorIndexedDbSupport = true;
-        }
+      if (ua.match(/(Safari)/i)) {
+        poorIndexedDbSupport = true;
       }
     }
 
