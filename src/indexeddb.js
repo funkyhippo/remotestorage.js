@@ -401,43 +401,8 @@ IndexedDB._rs_supported = function () {
     //                    context.mozIndexedDB || context.oIndexedDB      ||
     //                    context.msIndexedDB;
 
-    // Detect browsers with known IndexedDb issues (e.g. Android pre-4.4)
-    var poorIndexedDbSupport = false;
-
-    if (typeof navigator !== 'undefined') {
-      const ua = navigator.userAgent;
-
-      if (ua.match(/Android (2|3|4\.[0-3])/)) {
-        // Chrome and Firefox support IndexedDB
-        if (!ua.match(/Chrome|Firefox/)) {
-          poorIndexedDbSupport = true;
-        }
-      }
-
-      // iOS 12 and 13 have serious bugs (see #1168)
-      if (ua.match(/(Safari)/i)) {
-        poorIndexedDbSupport = true;
-      }
-    }
-
-    if ('indexedDB' in context && !poorIndexedDbSupport) {
-      try {
-        var check = indexedDB.open("rs-check");
-        check.onerror = function (/* event */) {
-          reject();
-        };
-        check.onsuccess = function (/* event */) {
-          check.result.close();
-          indexedDB.deleteDatabase("rs-check");
-          resolve();
-        };
-      } catch(e) {
-        reject();
-      }
-    } else {
-      reject();
-    }
-
+    // Skip IndexedDB completely
+    reject();
   });
 };
 
