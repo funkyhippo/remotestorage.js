@@ -246,7 +246,7 @@ IndexedDB.prototype = {
           // hacky!
           this.db = other;
         }
-        if (typeof callback === 'function') { callback(self); }
+        if (typeof callback === 'function') { callback(this); }
       });
     });
   },
@@ -403,10 +403,19 @@ IndexedDB._rs_supported = function () {
 
     // Detect browsers with known IndexedDb issues (e.g. Android pre-4.4)
     var poorIndexedDbSupport = false;
-    if (typeof navigator !== 'undefined' &&
-        navigator.userAgent.match(/Android (2|3|4\.[0-3])/)) {
-      // Chrome and Firefox support IndexedDB
-      if (!navigator.userAgent.match(/Chrome|Firefox/)) {
+
+    if (typeof navigator !== 'undefined') {
+      const ua = navigator.userAgent;
+
+      if (ua.match(/Android (2|3|4\.[0-3])/)) {
+        // Chrome and Firefox support IndexedDB
+        if (!ua.match(/Chrome|Firefox/)) {
+          poorIndexedDbSupport = true;
+        }
+      }
+
+      // iOS 12 and 13 have serious bugs (see #1168)
+      if (ua.match(/(Safari)/i)) {
         poorIndexedDbSupport = true;
       }
     }
